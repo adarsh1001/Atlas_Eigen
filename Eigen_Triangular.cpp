@@ -40,6 +40,18 @@ public:
     return S;
   }
 
+  SymMat<T> operator - (const SymMat<T> &Obj)   //Overload + for Sym
+  {
+    SymMat<T> S;
+    S.rows = rows;
+    S.cols = cols;
+    for(int i=0; i<V.size(); i++)
+    {
+      S.V.push_back(V[i]-Obj.V[i]);
+    }
+    return S;
+  }
+
   template <typename D>
   SymMat<T> operator + (const Eigen::MatrixBase<D> &Obj)   //Overload + for Eigen
   {
@@ -59,6 +71,31 @@ public:
       for(int j=i; j<rows; j++)
       {
         S_2.V.push_back(V[k]+Obj(i,j));
+        k++;
+      }
+    }
+    return S_2;
+  }
+
+  template <typename D>
+  SymMat<T> operator - (const Eigen::MatrixBase<D> &Obj)   //Overload + for Eigen
+  {
+    //SymMat<T> S_1(Obj);
+    SymMat<T> S_2;
+    S_2.rows = rows;
+    S_2.cols = cols;
+    /*
+    for(int i=0; i<V.size(); i++)
+    {
+      S_2.V.push_back(V[i]+S_1.V[i]);
+    }
+    */
+    int k=0;
+    for(int i=0; i<cols; i++)
+    {
+      for(int j=i; j<rows; j++)
+      {
+        S_2.V.push_back(V[k]-Obj(i,j));
         k++;
       }
     }
@@ -115,7 +152,7 @@ int main()
   S3 = S1 + S2;
   cout<<"\nSymMat 3: ";
   cout<<S3;
-  S3 = S1 + M3;
+  S3 = S1 - M3;
   cout<<"\nSymMat 3: ";
   cout<<S3;
   cout<<endl;
