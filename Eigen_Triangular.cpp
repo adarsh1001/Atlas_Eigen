@@ -102,24 +102,54 @@ public:
     return S_2;
   }
 
+  SymMat<T> operator * (SymMat<T> &Obj)   //Overload + for Sym
+  {
+    SymMat<T> S;
+    S.rows = rows;
+    S.cols = Obj.cols;
+    int l=0;
+    for(int i = 0; i < rows; i++)
+    {
+      for(int j = i; j < Obj.cols; j++)
+      {
+        S.V.push_back(0);
+        for(int k = 0; k < cols; k++)
+          S.V[l] += ((this->Access(i,k)) * Obj.Access(k,j));
+        l++;
+      }
+    }
+    return S;
+  }
+
   T Access(int r, int c)      //Access specific Position
   {
     int k=0;
     int flag=0;
-    for(int i=0; i<rows; i++)
+    if(r>=rows || c>=cols)
+      cout<<"Invalid!";
+    else
     {
-      for(int j=i; j<rows; j++)
+      if(r>c)
       {
-        if (i==r && j==c)
-        {
-          flag=1;
-          break;
-        }
-        else
-          k++;
+        int temp = r;
+        r=c;
+        c=temp;
       }
-      if(flag==1)
-        break;
+      for(int i=0; i<rows; i++)
+      {
+        for(int j=i; j<rows; j++)
+        {
+          if (i==r && j==c)
+          {
+            flag=1;
+            break;
+          }
+          else
+            k++;
+        }
+        if(flag==1)
+          break;
+      }
     }
     return V[k];
   }
@@ -152,7 +182,7 @@ int main()
   S3 = S1 + S2;
   cout<<"\nSymMat 3: ";
   cout<<S3;
-  S3 = S1 - M3;
+  S3 = S1 * S2;
   cout<<"\nSymMat 3: ";
   cout<<S3;
   cout<<endl;
