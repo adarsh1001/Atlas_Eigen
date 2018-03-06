@@ -102,23 +102,37 @@ public:
     return S_2;
   }
 
-  SymMat<T> operator * (SymMat<T> &Obj)   //Overload + for Sym
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> operator * (SymMat<T> &Obj)   //Overload + for Sym
   {
-    SymMat<T> S;
-    S.rows = rows;
-    S.cols = Obj.cols;
-    int l=0;
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> M;
+    M.resize(rows, Obj.cols);
     for(int i = 0; i < rows; i++)
     {
-      for(int j = i; j < Obj.cols; j++)
+      for(int j = 0; j < Obj.cols; j++)
       {
-        S.V.push_back(0);
+        M(i,j)=0;
         for(int k = 0; k < cols; k++)
-          S.V[l] += ((this->Access(i,k)) * Obj.Access(k,j));
-        l++;
+          M(i,j) += ((this->Access(i,k)) * Obj.Access(k,j));
       }
     }
-    return S;
+    return M;
+  }
+
+  template <typename D>
+  Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> operator * (const Eigen::MatrixBase<D> &Obj)   //Overload + for Sym
+  {
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> M;
+    M.resize(rows, Obj.cols());
+    for(int i = 0; i < rows; i++)
+    {
+      for(int j = 0; j < Obj.cols(); j++)
+      {
+        M(i,j)=0;
+        for(int k = 0; k < cols; k++)
+          M(i,j) += ((this->Access(i,k)) * Obj(k,j));
+      }
+    }
+    return M;
   }
 
   T Access(int r, int c)      //Access specific Position
@@ -170,7 +184,7 @@ int main()
   M1 << 1,2,3,4,5,6,7,8,9;
   Eigen::MatrixXi M2(3,3);
   M2 << 1,1,1,1,1,1,1,1,1;
-  Eigen::MatrixXi M3(3,3);
+  Eigen::Matrix<int,3,3> M3;
   M3 << 1,1,1,1,1,1,1,1,1;
   SymMat<int> S1(M1);
   SymMat<int> S2(M2);
@@ -182,9 +196,9 @@ int main()
   S3 = S1 + S2;
   cout<<"\nSymMat 3: ";
   cout<<S3;
-  S3 = S1 * S2;
-  cout<<"\nSymMat 3: ";
-  cout<<S3;
+  M3 = S1 * M2;
+  cout<<"\nEigen Mat 3: ";
+  cout<<M3;
   cout<<endl;
   return 0;
 }
