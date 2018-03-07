@@ -113,8 +113,7 @@ public:
   Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> operator * (const Eigen::MatrixBase<D>&);
 
   /**
-      Operator '<<' overloaded to display the contents of SymMat. Uses the access
-      function to display the complete matrix.
+      Operator '<<' overloaded to display the contents of SymMat.
 
       @param Reference to ostream object, SymMat object to be displayed.
       @return ostream object
@@ -125,17 +124,29 @@ public:
 };
 
 template <typename T>
-SymMat<T>::SymMat()    //Non-para Constructor
+SymMat<T>::SymMat()
 {
   rows=cols=0;
 }
 
 template <typename T>
 template <typename D>
-SymMat<T>::SymMat(Eigen::MatrixBase<D>& M)    //Non-para Constructor
+SymMat<T>::SymMat(Eigen::MatrixBase<D>& M)
 {
   rows = M.rows();
   cols = M.cols();
+  try
+  {
+    if(rows!=cols)
+      throw "\nError: Input Matrix is not a square matrix!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(0);
+  }
+
+  //Visit only the upper triangular positions
   for(int i=0; i<cols; i++)
   {
     for(int j=i; j<rows; j++)
@@ -150,38 +161,53 @@ T SymMat<T>::Access(int r, int c)
 {
   int k=0;
   int flag=0;
-  if(r>=rows || c>=cols)
-    cout<<"Invalid!";
-  else
+  try
   {
-    if(r>c)
+    if(r>=rows || c>=cols)
+      throw "\nError: The specified element to access is beyond the matrix";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(1);
+  }
+  if(r>c)  //If the element to return is in lower triangular part
+  {
+    int temp = r;
+    r=c;
+    c=temp;
+  }
+  for(int i=0; i<rows; i++)
+  {
+    for(int j=i; j<rows; j++)
     {
-      int temp = r;
-      r=c;
-      c=temp;
-    }
-    for(int i=0; i<rows; i++)
-    {
-      for(int j=i; j<rows; j++)
+      if (i==r && j==c)
       {
-        if (i==r && j==c)
-        {
-          flag=1;
-          break;
-        }
-        else
-          k++;
-      }
-      if(flag==1)
+        flag=1;
         break;
+      }
+      else
+        k++;
     }
+    if(flag==1)
+      break;
   }
   return V[k];
 }
 
 template <typename T>
-SymMat<T> SymMat<T>::operator + (const SymMat<T> &Obj)   //Overload + for Sym
+SymMat<T> SymMat<T>::operator + (const SymMat<T> &Obj)
 {
+  try
+  {
+    if(rows!=Obj.rows || cols!=Obj.cols)
+      throw "\nError: Cannot Add matrices of different orders!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(2);
+  }
   SymMat<T> S;
   S.rows = rows;
   S.cols = cols;
@@ -193,8 +219,18 @@ SymMat<T> SymMat<T>::operator + (const SymMat<T> &Obj)   //Overload + for Sym
 }
 
 template <typename T>
-SymMat<T> SymMat<T>::operator - (const SymMat<T> &Obj)   //Overload + for Sym
+SymMat<T> SymMat<T>::operator - (const SymMat<T> &Obj)
 {
+  try
+  {
+    if(rows!=Obj.rows || cols!=Obj.cols)
+      throw "\nError: Cannot Subtract matrices of different orders!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(2);
+  }
   SymMat<T> S;
   S.rows = rows;
   S.cols = cols;
@@ -207,8 +243,18 @@ SymMat<T> SymMat<T>::operator - (const SymMat<T> &Obj)   //Overload + for Sym
 
 template <typename T>
 template <typename D>
-SymMat<T> SymMat<T>::operator + (const Eigen::MatrixBase<D> &Obj)   //Overload + for Eigen
+SymMat<T> SymMat<T>::operator + (const Eigen::MatrixBase<D> &Obj)
 {
+  try
+  {
+    if(rows!=Obj.rows() || cols!=Obj.cols())
+      throw "\nError: Cannot Add matrices of different orders!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(2);
+  }
   SymMat<T> S;
   S.rows = rows;
   S.cols = cols;
@@ -227,8 +273,18 @@ SymMat<T> SymMat<T>::operator + (const Eigen::MatrixBase<D> &Obj)   //Overload +
 
 template <typename T>
 template <typename D>
-SymMat<T> SymMat<T>::operator - (const Eigen::MatrixBase<D> &Obj)   //Overload + for Eigen
+SymMat<T> SymMat<T>::operator - (const Eigen::MatrixBase<D> &Obj)
 {
+  try
+  {
+    if(rows!=Obj.rows() || cols!=Obj.cols())
+      throw "\nError: Cannot Subtract matrices of different orders!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(2);
+  }
   SymMat<T> S;
   S.rows = rows;
   S.cols = cols;
@@ -245,8 +301,18 @@ SymMat<T> SymMat<T>::operator - (const Eigen::MatrixBase<D> &Obj)   //Overload +
 }
 
 template <typename T>
-Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> SymMat<T>::operator * (SymMat<T> &Obj)   //Overload + for Sym
+Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> SymMat<T>::operator * (SymMat<T> &Obj)
 {
+  try
+  {
+    if(cols!=Obj.rows)
+      throw "\nError: The number of columns of Matrix 1 and the number of rows of Matrix 2 donot match!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(3);
+  }
   Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> M;
   M.resize(rows, Obj.cols);
   for(int i = 0; i < rows; i++)
@@ -265,6 +331,16 @@ template <typename T>
 template <typename D>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> SymMat<T>::operator * (const Eigen::MatrixBase<D> &Obj)
 {
+  try
+  {
+    if(cols!=Obj.rows())
+      throw "\nError: The number of columns of Matrix 1 and the number of rows of Matrix 2 donot match!";
+  }
+  catch (const char* msg)
+  {
+    cerr << msg << endl;
+    exit(3);
+  }
   Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> M;
   M.resize(rows, Obj.cols());
   for(int i = 0; i < rows; i++)
