@@ -22,19 +22,19 @@ The Test.cpp file shows a few examples of addition and multiplication cases. Fol
 
 1. Clone the repository.
 
-'''
+```
 git clone https://github.com/adarsh1001/Atlas_Eigen.git
-'''
+```
 
 2. Compile the Test.cpp with g++.
 
-'''
+```
 g++ Test.cpp -o Test
-'''
+```
 
 3. Execute the run file
 
-'''
+```
 ./Test
-'''
+```
 
