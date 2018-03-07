@@ -20,7 +20,10 @@
 using namespace std;
 
 /**
-    Templated Class SymMat
+    A template class SymMat to store only the upper triangular part of an Eigen
+    matrix as a linear array and evaluate the following expressions-
+    1. SymMat +&- SymMat/Eigen Matrix
+    2. SymMat * SymMat/Eigen Matrix    
 */
 template <typename T>
 class SymMat
