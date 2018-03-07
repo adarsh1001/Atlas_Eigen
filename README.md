@@ -5,6 +5,7 @@ In this project, a standalone C++ class was built which can work with Symmetric 
 2. SymMat +&- Eigen::Matrix
 3. SymMat * SymMat
 4. SymMat * Eigen::Matrix
+Eval Link: https://github.com/StewMH/GSoC2018/blob/master/evaluation_test.pdf
 
 ## Getting Started
 
