@@ -39,4 +39,5 @@ g++ Test.cpp -o Test
 ```
 ./Test
 ```
+You can use the functions in a similar manner as presented in the Test.cpp file.
 
