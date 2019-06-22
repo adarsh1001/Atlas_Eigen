@@ -1,12 +1,10 @@
-# Faster Matrix Algebra for ATLAS
+# Faster Matrix Algebra for Symmetric Matrices
 
 In this project, a standalone C++ class was built which can work with Symmetric Matrices on top of the Eigen Library. Working only with the upper/lower triangular part of a symmetric matrix reduces the storage space as well as the complexity for different matrix operations considerably. The following operations were implemented-
 1. SymMat +&- SymMat
 2. SymMat +&- Eigen::Matrix
 3. SymMat * SymMat
 4. SymMat * Eigen::Matrix
-
-Eval Link: https://github.com/StewMH/GSoC2018/blob/master/evaluation_test.pdf
 
 ## Getting Started
 
