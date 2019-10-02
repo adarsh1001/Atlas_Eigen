@@ -1,5 +1,5 @@
 /**
-    Faster Matrix Algebra for ATLAS: Evaluation Test (GSoC 2018)
+    Faster Matrix Algebra (Eigen)
     Eigen_Triangular.cpp
     Purpose: To make a class, SymMat, accomodating symmetric matrices with
     Eigen Matrices. Operations to be defined-
